@@ -23,7 +23,7 @@ A simple tool for testing availability of a given URI, utilising configurable co
 
 Example usage:
 
-> cyborg --uri https://lee.io --delay 3s --workers 3
+> cyborg --uri https://ukfast.co.uk --delay 3s --workers 3
 
 
 ## Output
@@ -31,24 +31,21 @@ Example usage:
 Example output:
 
 ```
-2019/07/03 10:39:48 Starting worker [1]
-2019/07/03 10:39:48 Starting worker [2]
-2019/07/03 10:39:48 Starting worker [3]
-2019/07/03 10:39:48 [Worker 1] Got result with status code [200] in [133.0969ms]
-2019/07/03 10:39:48 [Worker 2] Got result with status code [200] in [132.08ms]
-2019/07/03 10:39:48 [Worker 3] Got result with status code [200] in [132.0698ms]
-2019/07/03 10:39:51 [Worker 2] Got result with status code [200] in [60.2247ms]
-2019/07/03 10:39:51 [Worker 3] Got result with status code [200] in [58.2248ms]
-2019/07/03 10:39:51 [Worker 1] Got result with status code [200] in [62.2146ms]
-2019/07/03 10:39:52 Caught interupt signal, instructing workers to stop
-2019/07/03 10:39:52 [Worker 1] Instructing worker to stop..
-2019/07/03 10:39:52 [Worker 2] Instructing worker to stop..
-2019/07/03 10:39:52 [Worker 3] Instructing worker to stop..
-2019/07/03 10:39:54 [Worker 3] Got result with status code [200] in [59.4172ms]
-2019/07/03 10:39:54 [Worker 3] Worker stopped
-2019/07/03 10:39:54 [Worker 1] Got result with status code [200] in [57.4239ms]
-2019/07/03 10:39:54 [Worker 2] Got result with status code [200] in [61.4343ms]
-2019/07/03 10:39:54 [Worker 1] Worker stopped
-2019/07/03 10:39:54 [Worker 2] Worker stopped
-2019/07/03 10:39:54 Executed [9] requests. Successful requests: 9, Failed requests: 0, Total execution time: 6.258393s, Minimum request time: 57.4239ms, Maximum request time: 133.0969ms
+2020/06/16 16:44:23 [Worker 3] Starting worker
+2020/06/16 16:44:23 [Worker 3] Starting worker
+2020/06/16 16:44:23 [Worker 3] Starting worker
+2020/06/16 16:44:23 [Worker 3] Got result with status code [200] in [145.9957ms]
+2020/06/16 16:44:23 [Worker 3] Got result with status code [200] in [145.9957ms]
+2020/06/16 16:44:23 [Worker 3] Got result with status code [200] in [146.9981ms]
+2020/06/16 16:44:24 [Worker 3] Got result with status code [200] in [92.9954ms]
+2020/06/16 16:44:24 [Worker 3] Got result with status code [200] in [93.993ms]
+2020/06/16 16:44:24 [Worker 3] Got result with status code [200] in [98.9922ms]
+2020/06/16 16:44:26 [Worker 3] Got result with status code [200] in [176.9983ms]
+2020/06/16 16:44:26 [Worker 3] Got result with status code [200] in [172.0018ms]
+2020/06/16 16:44:26 [Worker 3] Got result with status code [200] in [177.9985ms]
+2020/06/16 16:44:26 Caught interupt signal, instructing workers to stop
+2020/06/16 16:44:27 [Worker 3] Worker stopped
+2020/06/16 16:44:27 [Worker 3] Worker stopped
+2020/06/16 16:44:27 [Worker 3] Worker stopped
+2020/06/16 16:44:27 Executed [9] requests. Successful requests: 9, Failed requests: 0, Total execution time: 3.4349985s, Minimum request time: 92.9954ms, Maximum request time: 177.9985ms
 ```
