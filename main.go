@@ -1,0 +1,167 @@
+package main
+
+import (
+	"bytes"
+	"context"
+	"crypto/tls"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"os/signal"
+	"strings"
+	"time"
+
+	flag "github.com/spf13/pflag"
+	"github.com/spf13/viper"
+	"golang.org/x/sync/errgroup"
+)
+
+func main() {
+	var flagURI = flag.String("uri", "", "URI to hit")
+	var flagMethod = flag.String("method", "GET", "HTTP method to use")
+	var flagHeaders = flag.StringArrayP("header", "H", []string{}, "Header(s) to use e.g. Accept: application/json")
+	var flagHost = flag.String("host", "", "Optional host header")
+	var flagWorkers = flag.Int("workers", 1, "Amount of workers")
+	var flagDelay = flag.String("delay", "1s", "Delay per request. Defaults to 1s")
+	var flagJSONBody = flag.String("jsonbody", "", "JSON body of request")
+	var flagHTTPSSkipVerify = flag.BoolP("httpsskipverify", "k", false, "Specifies HTTPS insecure validation should be skipped")
+	var flagTimeout = flag.String("timeout", "", "Specifies timeout for HTTP requests")
+	var flagConfig = flag.String("config", "$HOME/.cyborg", "Path to config. Defaults to $HOME/.cyborg.yaml")
+
+	flag.Parse()
+
+	err := initConfig(*flagConfig)
+	if err != nil {
+		log.Fatalf("failed to init config: %s", err)
+	}
+
+	if *flagHTTPSSkipVerify {
+		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	}
+
+	client := &http.Client{}
+
+	if *flagURI == "" {
+		log.Fatal("must provide uri")
+	}
+
+	parsedDelayDuration, err := parseDurationString(flagDelay)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	parsedTimeoutDuration, err := parseDurationString(flagTimeout)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	if parsedTimeoutDuration != nil {
+		client.Timeout = *parsedTimeoutDuration
+	}
+
+	parsedHeaders := parseHeadersFlag(flagHeaders)
+
+	stats := NewStats()
+	stats.Start()
+
+	logManager := NewRequestLoggerManager()
+	logManager.AddLogger(&RequestLoggerStdout{})
+
+	if viper.GetBool("logger.elk.enabled") {
+		elkLogger, err := NewRequestLoggerELK()
+		if err != nil {
+			log.Fatalf("failed to initialise ELK logger: %s", err)
+		}
+		logManager.AddLogger(elkLogger)
+	}
+
+	workers := make([]*Worker, *flagWorkers)
+	for i := 0; i < *flagWorkers; i++ {
+		workerNum := i + 1
+		worker := Worker{
+			Number:               workerNum,
+			Delay:                parsedDelayDuration,
+			RequestLoggerManager: logManager,
+			Stats:                stats,
+			Client:               client,
+			Request: func() (*http.Request, error) {
+				bodyBuf := new(bytes.Buffer)
+				if *flagJSONBody != "" {
+					err := json.NewEncoder(bodyBuf).Encode(flagJSONBody)
+					if err != nil {
+						return nil, fmt.Errorf("failed to json encode body: %s", err)
+					}
+				}
+
+				req, err := http.NewRequest(*flagMethod, *flagURI, bodyBuf)
+				if err != nil {
+					return nil, fmt.Errorf("failed to create request: %s", err)
+				}
+
+				if *flagHost != "" {
+					req.Host = *flagHost
+				}
+
+				req.Header = parsedHeaders
+
+				return req, nil
+			},
+		}
+
+		workers[i] = &worker
+	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+	g, ctx := errgroup.WithContext(ctx)
+
+	start := time.Now()
+	for _, worker := range workers {
+		g.Go(func() error {
+			return worker.Start(ctx)
+		})
+	}
+
+	flushResults := func() {
+		elapsed := time.Since(start)
+		log.Printf("Executed [%d] requests. Successful requests: %d, Failed requests: %d, Total execution time: %s, Minimum request time: %s, Maximum request time: %s", stats.SuccessfulRequests+stats.FailedRequests, stats.SuccessfulRequests, stats.FailedRequests, elapsed, stats.MinRequestTime, stats.MaxRequestTime)
+	}
+
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	go func() {
+		for range c {
+			log.Printf("Caught interupt signal, instructing workers to stop")
+			cancel()
+		}
+	}()
+
+	g.Wait()
+	flushResults()
+}
+
+func parseDurationString(delay *string) (*time.Duration, error) {
+	if *delay == "" {
+		return nil, nil
+	}
+
+	d, err := time.ParseDuration(*delay)
+	if err != nil {
+		return nil, errors.New("invalid delay")
+	}
+
+	return &d, nil
+}
+
+func parseHeadersFlag(flagHeaders *[]string) http.Header {
+	parsedHeaders := make(map[string][]string)
+
+	for _, header := range *flagHeaders {
+		headerSplit := strings.Split(header, ":")
+		parsedHeaders[strings.TrimSpace(headerSplit[0])] = []string{strings.TrimSpace(headerSplit[1])}
+	}
+
+	return parsedHeaders
+}
