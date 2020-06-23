@@ -31,21 +31,18 @@ Example usage:
 Example output:
 
 ```
-2020/06/16 16:44:23 [Worker 3] Starting worker
-2020/06/16 16:44:23 [Worker 3] Starting worker
-2020/06/16 16:44:23 [Worker 3] Starting worker
-2020/06/16 16:44:23 [Worker 3] Got result with status code [200] in [145.9957ms]
-2020/06/16 16:44:23 [Worker 3] Got result with status code [200] in [145.9957ms]
-2020/06/16 16:44:23 [Worker 3] Got result with status code [200] in [146.9981ms]
-2020/06/16 16:44:24 [Worker 3] Got result with status code [200] in [92.9954ms]
-2020/06/16 16:44:24 [Worker 3] Got result with status code [200] in [93.993ms]
-2020/06/16 16:44:24 [Worker 3] Got result with status code [200] in [98.9922ms]
-2020/06/16 16:44:26 [Worker 3] Got result with status code [200] in [176.9983ms]
-2020/06/16 16:44:26 [Worker 3] Got result with status code [200] in [172.0018ms]
-2020/06/16 16:44:26 [Worker 3] Got result with status code [200] in [177.9985ms]
-2020/06/16 16:44:26 Caught interupt signal, instructing workers to stop
-2020/06/16 16:44:27 [Worker 3] Worker stopped
-2020/06/16 16:44:27 [Worker 3] Worker stopped
-2020/06/16 16:44:27 [Worker 3] Worker stopped
-2020/06/16 16:44:27 Executed [9] requests. Successful requests: 9, Failed requests: 0, Total execution time: 3.4349985s, Minimum request time: 92.9954ms, Maximum request time: 177.9985ms
+2020/06/23 14:43:47 [Worker 2] Starting worker
+2020/06/23 14:43:47 [Worker 1] Starting worker
+2020/06/23 14:43:47 [Worker 3] Starting worker
+2020/06/23 14:43:47 [Worker 1] Got result with status code [200] in [111.9991ms]
+2020/06/23 14:43:47 [Worker 2] Got result with status code [200] in [132.9937ms]
+2020/06/23 14:43:47 [Worker 3] Got result with status code [200] in [109.0029ms]
+2020/06/23 14:43:50 [Worker 1] Got result with status code [200] in [70.9984ms]
+2020/06/23 14:43:50 [Worker 3] Got result with status code [200] in [76.9929ms]
+2020/06/23 14:43:50 [Worker 2] Got result with status code [200] in [80.9952ms]
+2020/06/23 14:43:51 Caught interupt signal, instructing workers to stop
+2020/06/23 14:43:53 [Worker 1] Worker stopped
+2020/06/23 14:43:53 [Worker 3] Worker stopped
+2020/06/23 14:43:53 [Worker 2] Worker stopped
+2020/06/23 14:43:53 Executed [6] requests. Successful requests: 6, Failed requests: 0, Total execution time: 6.2312894s, Minimum request time: 70.9984ms, Maximum request time: 132.9937ms
 ```

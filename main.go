@@ -111,6 +111,7 @@ func main() {
 			},
 		}
 
+		fmt.Println(worker.Number)
 		workers[i] = &worker
 	}
 
@@ -119,8 +120,9 @@ func main() {
 
 	start := time.Now()
 	for _, worker := range workers {
+		w := worker
 		g.Go(func() error {
-			return worker.Start(ctx)
+			return w.Start(ctx)
 		})
 	}
 
