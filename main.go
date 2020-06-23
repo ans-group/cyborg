@@ -111,7 +111,6 @@ func main() {
 			},
 		}
 
-		fmt.Println(worker.Number)
 		workers[i] = &worker
 	}
 
