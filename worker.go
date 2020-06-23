@@ -79,6 +79,7 @@ func (w *Worker) failure(err error) {
 		Worker: w.Number,
 	})
 }
+
 func (w *Worker) log(msg string) {
 	log.Printf("[Worker %d] %s", w.Number, msg)
 }

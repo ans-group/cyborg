@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"crypto/tls"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -26,7 +25,7 @@ func main() {
 	var flagHost = flag.String("host", "", "Optional host header")
 	var flagWorkers = flag.Int("workers", 1, "Amount of workers")
 	var flagDelay = flag.String("delay", "1s", "Delay per request. Defaults to 1s")
-	var flagJSONBody = flag.String("jsonbody", "", "JSON body of request")
+	var flagBody = flag.String("body", "", "Body of request")
 	var flagHTTPSSkipVerify = flag.BoolP("httpsskipverify", "k", false, "Specifies HTTPS insecure validation should be skipped")
 	var flagTimeout = flag.String("timeout", "", "Specifies timeout for HTTP requests")
 	var flagConfig = flag.String("config", "$HOME/.cyborg", "Path to config. Defaults to $HOME/.cyborg.yaml")
@@ -89,11 +88,8 @@ func main() {
 			Client:               client,
 			Request: func() (*http.Request, error) {
 				bodyBuf := new(bytes.Buffer)
-				if *flagJSONBody != "" {
-					err := json.NewEncoder(bodyBuf).Encode(flagJSONBody)
-					if err != nil {
-						return nil, fmt.Errorf("failed to json encode body: %s", err)
-					}
+				if *flagBody != "" {
+					bodyBuf.WriteString(*flagBody)
 				}
 
 				req, err := http.NewRequest(*flagMethod, *flagURI, bodyBuf)
