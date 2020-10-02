@@ -24,11 +24,11 @@ func main() {
 	var flagHeaders = flag.StringArrayP("header", "H", []string{}, "Header(s) to use e.g. Accept: application/json")
 	var flagHost = flag.String("host", "", "Optional host header")
 	var flagWorkers = flag.Int("workers", 1, "Amount of workers")
-	var flagDelay = flag.String("delay", "1s", "Delay per request. Defaults to 1s")
+	var flagDelay = flag.String("delay", "1s", "Delay per request")
 	var flagBody = flag.String("body", "", "Body of request")
 	var flagHTTPSSkipVerify = flag.BoolP("httpsskipverify", "k", false, "Specifies HTTPS insecure validation should be skipped")
 	var flagTimeout = flag.String("timeout", "", "Specifies timeout for HTTP requests")
-	var flagConfig = flag.String("config", "$HOME/.cyborg", "Path to config. Defaults to $HOME/.cyborg.yaml")
+	var flagConfig = flag.String("config", "$HOME/.cyborg", "Path to config")
 
 	flag.Parse()
 

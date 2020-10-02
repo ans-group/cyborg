@@ -5,12 +5,14 @@ A simple tool for testing availability of a given URI, utilising configurable co
 ## Help
 
 ```
-      --delay string         Optional delay per request
+      --body string          Body of request
+      --config string        Path to config (default "$HOME/.cyborg")      
+      --delay string         Delay per request (default "1s")
   -H, --header stringArray   Header(s) to use e.g. Accept: application/json
       --host string          Optional host header
   -k, --httpsskipverify      Specifies HTTPS insecure validation should be skipped
-      --jsonbody string      JSON body of request
       --method string        HTTP method to use (default "GET")
+      --timeout string       Specifies timeout for HTTP requests
       --uri string           URI to hit
       --workers int          Amount of workers (default 1)
 ```
