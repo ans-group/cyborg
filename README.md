@@ -13,6 +13,7 @@ Usage: cyborg [options...] <url>
       --host string          Optional host header
   -k, --httpsskipverify      Specifies HTTPS insecure validation should be skipped
       --method string        HTTP method to use (default "GET")
+      --no-colour            Disables coloured output
       --timeout string       Specifies timeout for HTTP requests
       --workers int          Amount of workers (default 1)
 ```
