@@ -11,7 +11,7 @@ type RequestLoggerStdout struct{}
 
 func (l *RequestLoggerStdout) Log(entry RequestLogEntry) {
 	if entry.Error != nil {
-		log.Printf("[Worker %d] Request failure: %s", entry.Error)
+		log.Printf("[Worker %d] Request failure: %s", entry.Worker, entry.Error)
 	} else {
 		log.Printf("[Worker %d] Got result with status code [%s] in [%s]", entry.Worker, formatStatusCodeString(entry.StatusCode), entry.RequestTime)
 	}

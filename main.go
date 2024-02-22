@@ -19,7 +19,11 @@ import (
 )
 
 func main() {
-	var flagURI = flag.String("uri", "", "URI to hit")
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage: %s [options...] <url>\n", os.Args[0])
+		flag.PrintDefaults()
+	}
+
 	var flagMethod = flag.String("method", "GET", "HTTP method to use")
 	var flagHeaders = flag.StringArrayP("header", "H", []string{}, "Header(s) to use e.g. Accept: application/json")
 	var flagHost = flag.String("host", "", "Optional host header")
@@ -43,8 +47,9 @@ func main() {
 
 	client := &http.Client{}
 
-	if *flagURI == "" {
-		log.Fatal("must provide uri")
+	url := flag.Arg(0)
+	if url == "" {
+		log.Fatal("must provide URL")
 	}
 
 	parsedDelayDuration, err := parseDurationString(flagDelay)
@@ -91,8 +96,7 @@ func main() {
 				if *flagBody != "" {
 					bodyBuf.WriteString(*flagBody)
 				}
-
-				req, err := http.NewRequest(*flagMethod, *flagURI, bodyBuf)
+				req, err := http.NewRequest(*flagMethod, url, bodyBuf)
 				if err != nil {
 					return nil, fmt.Errorf("failed to create request: %s", err)
 				}
