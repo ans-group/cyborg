@@ -5,27 +5,27 @@ A simple tool for testing availability of a given URI, utilising configurable co
 ## Help
 
 ```
+Usage: cyborg [options...] <url>
       --body string          Body of request
-      --config string        Path to config (default "$HOME/.cyborg")      
+      --config string        Path to config (default "$HOME/.cyborg")
       --delay string         Delay per request (default "1s")
   -H, --header stringArray   Header(s) to use e.g. Accept: application/json
       --host string          Optional host header
   -k, --httpsskipverify      Specifies HTTPS insecure validation should be skipped
       --method string        HTTP method to use (default "GET")
       --timeout string       Specifies timeout for HTTP requests
-      --uri string           URI to hit
       --workers int          Amount of workers (default 1)
 ```
 
 ## Environment
 
-* `CYBORG_COLOUR`: Output log messages with colour
+* `CYBORG_NOCOLOUR`: Output log messages without colour
 
 ## Usage
 
 Example usage:
 
-> cyborg --uri https://ukfast.co.uk --delay 3s --workers 3
+> cyborg --delay 3s --workers 3 https://www.ans.co.uk
 
 
 ## Output

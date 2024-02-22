@@ -7,18 +7,20 @@ import (
 	"github.com/spf13/viper"
 )
 
-type RequestLoggerStdout struct{}
+type RequestLoggerStdout struct {
+	NoColour bool
+}
 
 func (l *RequestLoggerStdout) Log(entry RequestLogEntry) {
 	if entry.Error != nil {
 		log.Printf("[Worker %d] Request failure: %s", entry.Worker, entry.Error)
 	} else {
-		log.Printf("[Worker %d] Got result with status code [%s] in [%s]", entry.Worker, formatStatusCodeString(entry.StatusCode), entry.RequestTime)
+		log.Printf("[Worker %d] Got result with status code [%s] in [%s]", entry.Worker, formatStatusCodeString(entry.StatusCode, l.NoColour), entry.RequestTime)
 	}
 }
 
-func formatStatusCodeString(code int) string {
-	if !viper.GetBool("colour") {
+func formatStatusCodeString(code int, nocolour bool) string {
+	if viper.GetBool("nocolour") || nocolour {
 		return fmt.Sprintf("%d", code)
 	}
 

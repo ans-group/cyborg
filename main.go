@@ -32,6 +32,7 @@ func main() {
 	var flagBody = flag.String("body", "", "Body of request")
 	var flagHTTPSSkipVerify = flag.BoolP("httpsskipverify", "k", false, "Specifies HTTPS insecure validation should be skipped")
 	var flagTimeout = flag.String("timeout", "", "Specifies timeout for HTTP requests")
+	var flagNoColour = flag.Bool("no-colour", false, "Disables coloured output")
 	var flagConfig = flag.String("config", "$HOME/.cyborg", "Path to config")
 
 	flag.Parse()
@@ -72,7 +73,7 @@ func main() {
 	stats.Start()
 
 	logManager := NewRequestLoggerManager()
-	logManager.AddLogger(&RequestLoggerStdout{})
+	logManager.AddLogger(&RequestLoggerStdout{NoColour: *flagNoColour})
 
 	if viper.GetBool("logger.elk.enabled") {
 		elkLogger, err := NewRequestLoggerELK()
