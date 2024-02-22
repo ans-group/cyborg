@@ -23,7 +23,9 @@ checksum:
 snapshot:
   name_template: "{{ .Tag }}-next"
 release:
-  disable: true
+  github:
+    owner: ans-group
+    name: cyborg
 changelog:
   sort: asc
   filters:
